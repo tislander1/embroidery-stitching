@@ -134,10 +134,10 @@ pyembroidery.write(pattern, filename_input + ".vp3")
 
 xL, yL = zip(*xy_c)
 plt.plot(xL, yL, linestyle='-', color='b')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
+plt.xlabel('X (inches)')
+plt.ylabel('Y (inches)')
 plt.axis('square')
-plt.title('Line Segments Connecting Points')
+plt.title('Stitch Pattern for ' + filename_input)
 plt.grid(True)
 
 plt.show()
