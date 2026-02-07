@@ -106,15 +106,15 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
 
 # Example usage
 
-fit_pattern_inside_H_W_inches = [20, 20]
+fit_pattern_inside_H_W_inches = [7, 5]
 filename_input = 'schnauzer.jpg'
 xy_c = halftone_stitch(image_path = filename_input,
                 fit_pattern_inside_H_W_inches = fit_pattern_inside_H_W_inches,
-                row_height_in = 0.2,
-                col_width_in = 0.15,
-                stitch_len_in = 0.1,
+                row_height_in = 0.12,
+                col_width_in = 0.1,
+                stitch_len_in = 0.08,
                 dark_thread_on_light_background = True,
-                stitch_height_scale = 0.9)
+                stitch_height_scale = 1.5)
 
 df = pd.DataFrame(xy_c, columns=['x', 'y'])
 df.to_csv(filename_input + '.csv')
@@ -125,8 +125,9 @@ pattern = pyembroidery.EmbPattern()
 pattern.add_thread({"rgb": (255, 0, 0), "description": "Red Thread", "catalog": "1000"})
 
 # Add coordinates as stitches
+scale_factor_vp3 = 254 # convert to units of 1/10 mm
 for x, y in xy_c:
-    pattern.add_stitch_absolute(pyembroidery.STITCH, x, y)
+    pattern.add_stitch_absolute(pyembroidery.STITCH, scale_factor_vp3*x, -scale_factor_vp3*y)
 
 # Export to VP3 format
 pyembroidery.write(pattern, filename_input + ".vp3")
