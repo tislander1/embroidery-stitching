@@ -50,7 +50,7 @@ def get_zigzag_points(cell_width, cell_height, excursion_fraction, stitch_distan
         xp = p_start[0] + ratio * (p_end[0] - p_start[0])
         yp = p_start[1] + ratio * (p_end[1] - p_start[1])
         
-        zigzag_points.append((xp + offset_x, yp + offset_y))
+        zigzag_points.append((xp + offset_y, yp + offset_x))
         current_dist += stitch_distance
     
     x = 2
@@ -83,7 +83,7 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
         row_x_y_coords = []
         for iy in range(numpy_img.shape[1]):
             x0 = row_height_in * (ix + 0.5)
-            y0 = col_width_in * (iy + 0.5)
+            y0 = col_width_in * (iy)
             if dark_thread_on_light_background:
                 excursion = stitch_height_scale*(1.0 - numpy_img[ix][iy])
             else:
@@ -101,12 +101,12 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
             x_y_coords.extend(row_x_y_coords)
     # by default x_y_coords is actually sideways because of the way PIL reads in images.  We need to rotate it.
     h = fit_pattern_inside_H_W_inches[0]
-    x_y_coords = [(c[1], h-c[0]) for c in x_y_coords]
+    x_y_coords = [(c[0], h-c[1]) for c in x_y_coords]
     return x_y_coords
 
 # Example usage
 
-fit_pattern_inside_H_W_inches = [7, 5]
+fit_pattern_inside_H_W_inches = [6.5, 4.5]
 filename_input = 'schnauzer.jpg'
 xy_c = halftone_stitch(image_path = filename_input,
                 fit_pattern_inside_H_W_inches = fit_pattern_inside_H_W_inches,
@@ -114,7 +114,7 @@ xy_c = halftone_stitch(image_path = filename_input,
                 col_width_in = 0.1,
                 stitch_len_in = 0.08,
                 dark_thread_on_light_background = True,
-                stitch_height_scale = 1.5)
+                stitch_height_scale = 1.0)
 
 df = pd.DataFrame(xy_c, columns=['x', 'y'])
 df.to_csv(filename_input + '.csv')
