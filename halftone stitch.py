@@ -8,6 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import math
 import pandas as pd
+import pyembroidery
 
 def get_zigzag_points(cell_width, cell_height, excursion_fraction, stitch_distance, offset_x = 0.0, offset_y = 0.0):
 
@@ -117,6 +118,18 @@ xy_c = halftone_stitch(image_path = filename_input,
 
 df = pd.DataFrame(xy_c, columns=['x', 'y'])
 df.to_csv(filename_input + '.csv')
+
+# Create a new embroidery pattern
+pattern = pyembroidery.EmbPattern()
+
+pattern.add_thread({"rgb": (255, 0, 0), "description": "Red Thread", "catalog": "1000"})
+
+# Add coordinates as stitches
+for x, y in xy_c:
+    pattern.add_stitch_absolute(pyembroidery.STITCH, x, y)
+
+# Export to VP3 format
+pyembroidery.write(pattern, filename_input + ".vp3")
 
 xL, yL = zip(*xy_c)
 plt.plot(xL, yL, linestyle='-', color='b')
