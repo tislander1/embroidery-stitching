@@ -106,8 +106,8 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
 
 # Example usage
 
-fit_pattern_inside_H_W_inches = [6.5, 4.5]
-filename_input = 'schnauzer.jpg'
+fit_pattern_inside_H_W_inches = [4.75, 6.75]
+filename_input = 'crane.jpg'
 xy_c = halftone_stitch(image_path = filename_input,
                 fit_pattern_inside_H_W_inches = fit_pattern_inside_H_W_inches,
                 row_height_in = 0.12,
@@ -145,3 +145,4 @@ plt.title('Stitch Pattern for ' + filename_input)
 plt.grid(True)
 
 plt.show()
+print('Done!')
