@@ -94,11 +94,21 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
                           stitch_distance = stitch_len_in,
                           offset_x = x0, offset_y = y0)
             row_x_y_coords.extend(zigzag_points)
-        if ix % 2 == 0:
-            x_y_coords.extend(row_x_y_coords)
-        else:
+        if ix % 2 == 1:
+            # reverse stitching order of every second row
             row_x_y_coords.reverse()
-            x_y_coords.extend(row_x_y_coords)
+        x = 2
+
+        # add vertical stitches to left or right border, if there is room
+        number_stitches_to_add_to_border = int(row_height_in / stitch_len_in - 1)
+        if number_stitches_to_add_to_border > 1 and len(x_y_coords) > 0:
+            border_stitches = []
+            last_pos = row_x_y_coords[0]
+            border_stitches = [(last_pos[0], last_pos[1] - n*stitch_len_in) for n in range(1,number_stitches_to_add_to_border+1)]
+            border_stitches.reverse()
+            x_y_coords.extend(border_stitches)
+
+        x_y_coords.extend(row_x_y_coords)
     # by default x_y_coords is actually sideways because of the way PIL reads in images.  We need to rotate it.
     h = fit_pattern_inside_H_W_inches[0]
     x_y_coords = [(c[0], h-c[1]) for c in x_y_coords]
@@ -110,8 +120,8 @@ fit_pattern_inside_H_W_inches = [4.75, 6.75]
 filename_input = 'crane.jpg'
 xy_c = halftone_stitch(image_path = filename_input,
                 fit_pattern_inside_H_W_inches = fit_pattern_inside_H_W_inches,
-                row_height_in = 0.12,
-                col_width_in = 0.1,
+                row_height_in = 0.15,
+                col_width_in = 0.15,
                 stitch_len_in = 0.08,
                 dark_thread_on_light_background = True,
                 stitch_height_scale = 1.2)
@@ -130,8 +140,8 @@ pattern.add_thread({"rgb": (255, 0, 0), "description": "Red Thread", "catalog": 
 # Add coordinates as stitches
 scale_factor_vp3 = 254 # convert to units of 1/10 mm
 
-for x, y in xy_c:
-    pattern.add_stitch_absolute(pyembroidery.STITCH, scale_factor_vp3*x, -scale_factor_vp3*y)
+for xi, yi in xy_c:
+    pattern.add_stitch_absolute(pyembroidery.STITCH, scale_factor_vp3*xi, -scale_factor_vp3*yi)
 
 # Export to VP3 format
 pyembroidery.write(pattern, filename_input + ".vp3")
