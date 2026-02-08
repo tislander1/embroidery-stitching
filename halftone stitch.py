@@ -93,11 +93,16 @@ def halftone_stitch(image_path, fit_pattern_inside_H_W_inches, row_height_in, co
                           excursion_fraction = excursion,
                           stitch_distance = stitch_len_in,
                           offset_x = x0, offset_y = y0)
+
+            # remove any near-duplicate points at the beginning of the zigzag_points list.
+            if len(row_x_y_coords) > 0 and math.sqrt((row_x_y_coords[-1][0] - zigzag_points[0][0])**2 + 
+                                                     (row_x_y_coords[-1][1] - zigzag_points[0][1])**2) < 0.25 * stitch_len_in:
+                zigzag_points.pop(0)
+            
             row_x_y_coords.extend(zigzag_points)
         if ix % 2 == 1:
             # reverse stitching order of every second row
             row_x_y_coords.reverse()
-        x = 2
 
         # add vertical stitches to left or right border, if there is room
         number_stitches_to_add_to_border = int(row_height_in / stitch_len_in - 1)
