@@ -125,11 +125,11 @@ fit_pattern_inside_H_W_inches = [4.75, 6.75]
 filename_input = 'crane.jpg'
 xy_c = halftone_stitch(image_path = filename_input,
                 fit_pattern_inside_H_W_inches = fit_pattern_inside_H_W_inches,
-                row_height_in = 0.15,
-                col_width_in = 0.15,
-                stitch_len_in = 0.08,
+                row_height_in = 0.12,
+                col_width_in = 0.12,
+                stitch_len_in = 0.10,
                 dark_thread_on_light_background = True,
-                stitch_height_scale = 1.2)
+                stitch_height_scale = 1.3)
 
 df = pd.DataFrame(xy_c, columns=['x', 'y'])
 df.to_csv(filename_input + '.csv')
