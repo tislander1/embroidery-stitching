@@ -9,6 +9,17 @@ def trace_ray(n_array, dx, dy, start_row, ds=0.1):
     dx, dy: physical size of each cell
     start_row: Nth element from the top (0-indexed)
     ds: step size for the integration
+
+    Suppose that a light ray shines into a nonuniform media where
+        n(x,y) is the index of refraction,
+        R is the position vector,
+        v is the light velocity,
+        and ds is a small increment along the path of the light ray.
+    What differential equation describes the path of the light ray?
+    Answer: The Ray Equation: d/ds(n * dR/ds) = grad n
+
+    This can be inverted to get: dR = ((grad n)*ds / n ) * ds
+
     """
     rows, cols = n_array.shape
     y_max, x_max = rows * dy, cols * dx
@@ -69,7 +80,7 @@ for iy in range(100):
         for center_y in range(0,100,step):
             for center_x in range(50,150,step):
                 if center_y != 0: #45:
-                    grid_n[iy, ix]  += 1.2 * np.exp(-((iy - center_y)**2 + (ix -center_x)**2) / 40)
+                    grid_n[iy, ix]  += 0.3 * np.exp(-((iy - center_y)**2 + (ix -center_x)**2) / 40)
 
 
 
