@@ -47,6 +47,10 @@ def trace_ray(n_array, dx, dy, start_row, ds=0.1):
 
     # 3. Integration (Euler Method)
     while 0 <= x < x_max and 0 <= y < y_max:
+
+        # The Ray Equation: d/ds(n * dR/ds) = grad n
+        # This can be inverted to solve for position vector R
+
         # Get local gradient
         grad_x = interp_gx((y, x))
         grad_y = interp_gy((y, x))
@@ -55,14 +59,11 @@ def trace_ray(n_array, dx, dy, start_row, ds=0.1):
         vx += grad_x * ds
         vy += grad_y * ds
         
-        # Normalize to find the new step in dr/ds
-        # Since |dr/ds| = 1, the magnitude of v must be n
         current_n = interp_n((y, x))
-        v_mag = np.sqrt(vx**2 + vy**2)
         
-        # Update position: dr = (v/n) * ds
-        x += (vx / v_mag) * ds
-        y += (vy / v_mag) * ds
+        # Update position: dR = (v/n) * ds
+        x += (vx / current_n) * ds
+        y += (vy / current_n) * ds
         
         path.append([x, y])
         
