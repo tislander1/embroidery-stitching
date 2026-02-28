@@ -99,3 +99,28 @@ for path_ix in paths_list:
 plt.colorbar(label='Refractive Index n')
 plt.legend()
 plt.show()
+
+
+
+# Function not yet used !!!
+def create_thin_tube(points, dw):
+    # 1. Create the centerline C
+    centerline = LineString(points)
+    
+    # 2. Create the tube with width dW using a buffer
+    # Use cap_style=1 (round) and join_style=1 (round) for a smooth tube
+    tube = centerline.buffer(dw / 2.0, cap_style=1, join_style=1)
+    
+    # Ensure we have a single Polygon
+    if not isinstance(tube, Polygon):
+        if hasattr(tube, 'geoms'):
+            tube = max(tube.geoms, key=lambda a: a.area)
+            
+    # 3. Orient the polygon clockwise
+    # Shapely's orient with sign=-1.0 forces clockwise exterior
+    tube_cw = orient(tube, sign=-1.0)
+    
+    # 4. Collect all points on the exterior boundary
+    exterior_points = list(tube_cw.exterior.coords)
+    
+    return tube_cw, exterior_points
