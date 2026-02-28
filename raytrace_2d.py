@@ -73,25 +73,25 @@ def trace_ray(n_array, dx, dy, start_row, ds=0.1):
 # Create a sample index gradient
 # Experiment with this
 
-step = 20
-grid_n = np.ones((100, 200))
-for iy in range(100):
-    for ix in range(200):
+step = 50
+grid_n = np.ones((401, 400))
+for iy in range(400):
+    for ix in range(400):
         grid_n[iy, ix] = 1.0
-        for center_y in range(0,100,step):
-            for center_x in range(50,150,step):
+        for center_y in range(20,400,40):
+            for center_x in range(50,400,step):
                 if center_y != 0: #45:
-                    grid_n[iy, ix]  += 0.3 * np.exp(-((iy - center_y)**2 + (ix -center_x)**2) / 40)
+                    grid_n[iy, ix]  += 0.2 * np.exp(-((iy - center_y)**2 + (ix -center_x)**2) / 150)
 
 
 
 paths_list = []
-for row_num in range(5,100,5):
-    q = trace_ray(grid_n, dx=1.0, dy=1.0, start_row=row_num, ds=0.5)
+for row_num in range(5,400,5):
+    q = trace_ray(grid_n, dx=1.0, dy=1.0, start_row=row_num, ds=0.3)
     paths_list.append(q)
 
 # Visualization
-plt.imshow(grid_n, extent=[0, 200, 100, 0], cmap='viridis')
+plt.imshow(grid_n, extent=[0, 400, 400, 0], cmap='viridis')
 
 for path_ix in paths_list:
     plt.plot(path_ix[:, 0], path_ix[:, 1], 'r-')
